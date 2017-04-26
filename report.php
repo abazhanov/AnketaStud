@@ -27,7 +27,7 @@
         <!-- Уникальный код -->
         <?php
           //Создаем отчет по преподавателям
-          $request="SELECT     id_prep, prep_man.fam, prep_man.imja, prep_man.otch, anstud_question.question, SUM(anstud_main.answer) sum_answer   
+          $request="SELECT     id_prep, prep_man.fam, prep_man.imja, prep_man.otch, anstud_question.question, AVG(anstud_main.answer) sum_answer   
                     FROM            anstud_main INNER JOIN
                                                     anstud_question ON anstud_main.question = anstud_question.id
 						                        INNER JOIN

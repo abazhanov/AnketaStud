@@ -41,7 +41,7 @@
       <!-- Single button -->
       <div class="btn-group">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Выберети группу <span class="caret"></span>
+          Выберете группу <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
     

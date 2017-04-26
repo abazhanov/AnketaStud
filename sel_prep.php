@@ -43,19 +43,25 @@
             Выбор группы <span class="caret"></span>
           </button>
           <ul class="dropdown-menu">
-    
+
           <?php
+            $CurrentGroup="TTT";
             while( $obj = sqlsrv_fetch_object($res)) {
               echo "<li><a href=\"sel_prep.php?id=".$obj->oid."\">".$obj->kod."</a></li>";
               //echo $obj->oid."---";
+              if($obj->oid==$_GET['id']) {
+                $CurrentGroup=$obj->kod;
+              }
             }
           ?>
           </ul>
+          <?php echo "<br><br><h2>Ваша группа: ".$CurrentGroup."</h2>"; ?>
+          
         </div>
 
 
         <div>
-        <br>
+        
         <h2>Оцените Ваших преподавателей:</h2>
 
       
@@ -88,7 +94,7 @@ WHERE        (zplan.gruppa = ".$_GET['id'].")";
             <?php
               while( $obj = sqlsrv_fetch_object($res)) { //Перебираем преподавателей
               echo "<h3>".$obj->fam." ".$obj->imja." ".$obj->otch."</h3>";
-              echo "<h2>".$obj->pid."</h3>";
+              //echo "<h2>".$obj->pid."</h3>";
               echo "<table class=\"table\">
                       <thead>
                         <tr>
