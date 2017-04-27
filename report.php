@@ -27,7 +27,31 @@
         <!-- Уникальный код -->
         <?php
           //Создаем отчет по преподавателям
-          $request="SELECT     id_prep, prep_man.fam, prep_man.imja, prep_man.otch, anstud_question.question, AVG(anstud_main.answer) sum_answer   
+          $request="SELECT     anstud_main.id_prep, prep_man.fam, prep_man.imja, prep_man.otch, anstud_question.question, round(AVG(anstud_main.answer), 2) sum_answer, round(sum(man.avgg ),2) as avv  
+                    FROM            anstud_main INNER JOIN
+                                                    anstud_question ON anstud_main.question = anstud_question.id
+						                        INNER JOIN
+                                                    prep_profile ON anstud_main.id_prep = prep_profile.oid
+						                        INNER JOIN
+                                                    prep_man ON prep_profile.prep = prep_man.oid 
+													
+													inner join (select id_prep, AVG(anstud_main.answer) as avgg from anstud_main
+													
+													INNER JOIN
+                                                    anstud_question ON anstud_main.question = anstud_question.id
+						                        INNER JOIN
+                                                    prep_profile ON anstud_main.id_prep = prep_profile.oid
+						                        INNER JOIN
+                                                    prep_man ON prep_profile.prep = prep_man.oid 
+													group by id_prep) as man on anstud_main.id_prep=man.id_prep
+
+						 GROUP BY anstud_main.id_prep, prep_man.fam, prep_man.imja, prep_man.otch, anstud_question.question
+						 ORDER BY avv desc";
+
+
+
+            //Старый запрос
+            $old_request="SELECT     id_prep, prep_man.fam, prep_man.imja, prep_man.otch, anstud_question.question, AVG(anstud_main.answer) sum_answer   
                     FROM            anstud_main INNER JOIN
                                                     anstud_question ON anstud_main.question = anstud_question.id
 						                        INNER JOIN
@@ -36,23 +60,59 @@
                                                     prep_man ON prep_profile.prep = prep_man.oid
 						 GROUP BY id_prep, prep_man.fam, prep_man.imja, prep_man.otch, anstud_question.question
 						 ORDER BY prep_man.fam, anstud_question.question";
+             ///////////////////////////////
+
+
             $res=sqlsrv_query($conn, $request);
-            $pid=0;
+            $pid=0; //проверка текущего ФИО и первой записи(0 означает что это первая запись и тогда не добавляется тег <hr>)
+            $DetailRecord="";
             while( $obj = sqlsrv_fetch_object($res)) {
                 if($pid !=0 and $pid != $obj->id_prep) {
+
+                    echo "<div class=\"collapse\" id=\"collapseExample$pid\">
+                            <div class=\"well\">
+                              $DetailRecord
+                            </div>
+                          </div>";
+
+                    $DetailRecord="";
+
                     echo "<hr>";
-                    echo"<h2>$obj->fam $obj->imja $obj->otch</h2>";
+                    echo"<h2>$obj->fam $obj->imja $obj->otch (Рейтинг: $obj->avv)</h2>";
+                    echo "<a class=\"btn btn-primary\" role=\"button\" data-toggle=\"collapse\" href=\"#collapseExample$obj->id_prep\" aria-expanded=\"false\" aria-controls=\"collapseExample\">
+                      Показать детальные записи
+                      </a> ";
+                    echo "<button class=\"btn btn-primary\" type=\"button\" data-toggle=\"collapse\" data-target=\"#collapseExample$obj->id_prep\" aria-expanded=\"false\" aria-controls=\"collapseExample\">
+                          Скрыть детальные записи
+                          </button>";
                 } elseif($pid==0){
-                    echo"<h2>$obj->fam $obj->imja $obj->otch</h2>";
+                    echo"<h2>$obj->fam $obj->imja $obj->otch (Рейтинг: $obj->avv)</h2>";
+                    echo "<a class=\"btn btn-primary\" role=\"button\" data-toggle=\"collapse\" href=\"#collapseExample$obj->id_prep\" aria-expanded=\"false\" aria-controls=\"collapseExample\">
+                      Показать детальные записи
+                      </a> ";
+                    echo "<button class=\"btn btn-primary\" type=\"button\" data-toggle=\"collapse\" data-target=\"#collapseExample$obj->id_prep\" aria-expanded=\"false\" aria-controls=\"collapseExample\">
+                          Скрыть детальные записи
+                          </button>";
                 }
-                echo "<p>$obj->question: $obj->sum_answer</p>";
+
+                $DetailRecord=$DetailRecord."<p>$obj->question: $obj->sum_answer</p>";
+
                 $pid=$obj->id_prep;
+
             }
+
+                             echo "<div class=\"collapse\" id=\"collapseExample$pid\">
+                            <div class=\"well\">
+                              $DetailRecord
+                            </div>
+                          </div>";  
                          
           
           
         ?>
 
+
+       
 
 
 
