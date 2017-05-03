@@ -9,46 +9,9 @@
       <!-- Bootstrap -->
       <link href="css/bootstrap.min.css" rel="stylesheet">
       <link href="css/dopstyle.css" rel="stylesheet">
-
-
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-      google.charts.load('current', {'packages':['line']});
-      google.charts.setOnLoadCallback(drawChart);
-
-    function drawChart() {
-
-      var data = new google.visualization.DataTable();
-      data.addColumn('number', 'Day');
-      data.addColumn('number', 'Guardians of the Galaxy');
-      //data.addColumn('number', 'The Avengers');
-      //data.addColumn('number', 'Transformers: Age of Extinction');
-
-      data.addRows([
-        [1,  37.8],
-        [2,  30.9],
-        [3,  25.4]
-        ]);
-
-      var options = {
-        chart: {
-          title: 'Box Office Earnings in First Two Weeks of Opening',
-          subtitle: 'in millions of dollars (USD)'
-        },
-        width: 900,
-        height: 500
-      };
-
-      var chart = new google.charts.Line(document.getElementById('linechart_material'));
-
-      chart.draw(data, google.charts.Line.convertOptions(options));
-    }
-    </script>
-
-
+      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   </head>
   <body>
-
     <div class="container">
         <h1>Преподаватель глазами студентов</h1>
         <!-- Open link with DB -->
@@ -63,6 +26,7 @@
         ?>
         <!-- Уникальный код -->
         <?php
+          /////////////////////////////////
           //Создаем отчет по преподавателям
           $request="SELECT     anstud_main.id_prep, prep_man.fam, prep_man.imja, prep_man.otch, anstud_question.question, round(AVG(anstud_main.answer), 2) sum_answer, round(sum(man.avgg ),2) as avv  
                     FROM            anstud_main INNER JOIN
@@ -88,13 +52,12 @@
             $res=sqlsrv_query($conn, $request);
             $pid=0; //проверка текущего ФИО и первой записи(0 означает что это первая запись и тогда не добавляется тег <hr>)
             $DetailRecord="";
+            $SumValueAnswerForPrepod=0; //Подсчитываем количество вопросов
+            $SumPrepod=0; //Подсчитываем количество преподавателей
             echo "<div class=\"panel-group\" id=\"accordion\" role=\"tablist\" aria-multiselectable=\"true\">";
-            while( $obj = sqlsrv_fetch_object($res)) {
+            while( $obj = sqlsrv_fetch_object($res)) {  //В цикле формируем раскрывающиеся вкладки
+                //Логика: while перебирает строки запроса. Как только if понимает что мы перескочили на нового преподавателя, то формируем вкладку, а внутри вкладки выводим сформированную в цикле таблицу результатов
                 if($pid !=0 and $pid != $obj->id_prep) {
-
-                    //echo "<hr>";
-                    //echo"<h2>$obj->fam $obj->imja $obj->otch (Рейтинг: $obj->avv)</h2>";
-
                     echo "<div class=\"panel panel-default\">
                             <div class=\"panel-heading\" role=\"tab\" id=\"heading$pid\">
                               <h4 class=\"panel-title\">
@@ -116,39 +79,38 @@
                                     $DetailRecord
                                   </tbody>
                                 </table>
-                               
                               </div>
                             </div>
                           </div>";
-
-
-
-                    //echo"<h2>$obj->fam $obj->imja $obj->otch (Рейтинг: $obj->avv)</h2>";
                     $DetailRecord="";
-
+                    $SumValueAnswerForPrepod=0;
+                    $SumPrepod++; //Раз мы попали в блок if, значит мы перескочили на нового преподавателя
                 }
 
                 $DetailRecord=$DetailRecord."<tr>
                                               <td>$obj->question</td>
                                               <td>$obj->sum_answer</td>
-                                              </tr>";
+                                              </tr>"; //Формируем таблицу с результатами
 
-
-
-
+                //Массив со значениями вопросов и ответов для формирования графика                                              
+                $ValueAnswerForPrepod[$SumPrepod][$SumValueAnswerForPrepod][0]=$obj->question;
+                $ValueAnswerForPrepod[$SumPrepod][$SumValueAnswerForPrepod][1]=$obj->sum_answer;
+                $ValueAnswerForPrepod[$SumPrepod][$SumValueAnswerForPrepod][2]="$obj->fam $obj->imja $obj->otch";
+                $SumValueAnswerForPrepod++; //Подсчет количества вопросов.
+                
 
                 $pid=$obj->id_prep;
                 $LastFIO="$obj->fam $obj->imja $obj->otch";
                 $LastFIORating=$obj->avv;
 
             }
-
+              //После завершения цикла еще раз выводим последнюю вкладку, т.к. из цикла мы уже вылетели, а последняя запись осталась не обработанной.
                                 echo "<div class=\"panel panel-default\">
                             <div class=\"panel-heading\" role=\"tab\" id=\"heading$pid\">
                               <h4 class=\"panel-title\">
                                 <a class=\"collapsed\" role=\"button\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#collapse$pid\" aria-expanded=\"true\" aria-controls=\"collapse$pid\">
                                   $LastFIO</a><span> </span>
-                                  <span class=\"glyphicon glyphicon-signal\" aria-hidden=\"true\"></span><span>$LastFIORating</span>
+                                  <span class=\"glyphicon glyphicon-signal\" aria-hidden=\"true\"></span> <span>$LastFIORating</span>
                               </h4>
                             </div>
                             <div id=\"collapse$pid\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"heading$pid\">
@@ -164,8 +126,6 @@
                                     $DetailRecord
                                   </tbody>
                                 </table>
-
-
                               </div>
                             </div>
                           </div>";
@@ -173,31 +133,69 @@
  
                          
           echo "</div>";
+//////////////////////////////////////////////////////////////////          
+//  Формируем JAVA скрипт, отвественный за рисование графика
+//////////////////////////////////////////////////////////////////
+ 
+echo "<script type=\"text/javascript\">";
+echo "  google.charts.load('current', {'packages':['line']});";
+echo "  google.charts.setOnLoadCallback(drawChart);";
+echo "  function drawChart() {";
+echo "  var data = google.visualization.arrayToDataTable([";
+        echo "['Вопрос'";
+        for ($i=0; $i<$SumPrepod+1; $i++) {
+          echo ", '".$ValueAnswerForPrepod[$i][0][2]."'";
+        }
+        echo "],";
+
+          ///////////////////////////
+          //Формируем массив значений
+          for ($i = 0; $i < $SumValueAnswerForPrepod-1; $i++) {
+             echo "['"   .$ValueAnswerForPrepod[0][$i][0]."'";
+             for ($j = 0; $j < $SumPrepod+1; $j++) {
+                echo ",".$ValueAnswerForPrepod[$j][$i][1];
+             }
+             echo "],";
+          }
+
+            echo "['"   .$ValueAnswerForPrepod[0][$i][0].  "'";
+          for ($j = 0; $j < $SumPrepod+1; $j++) {
+            echo ",".$ValueAnswerForPrepod[$j][$i][1];
+          }
+          //echo "['"   .$ValueAnswerForPrepod[$i][0].  "', ".$ValueAnswerForPrepod[$i][1]."]";
+          echo "]]);";
           
+          
+          //Массив сформирован
+          /////////////////////
+          
+//Продолжаем формировать JAVA скрипт
+echo "  var options = {
+         chart: {
+           title: 'Box Office Earnings in First Two Weeks of Opening',
+           subtitle: 'in millions of dollars (USD)'
+         },
+         width: 900,
+         height: 500
+         };
+
+         var chart = new google.charts.Line(document.getElementById('linechart_material'));
+
+         chart.draw(data, google.charts.Line.convertOptions(options));
+       }
+       </script>";
+//Закончили формировать JAVA скрипт
+///////////////////////////////////        
+        
         ?>
-
-
-
-
-
-
-
-       
-
-
-         <div id="linechart_material" style="width: 900px; height: 500px"></div>
-
+         <div id="linechart_material"></div> <!-- В этом месте рисуем график -->
     </div>
-    
     <br>
     <footer class="footer">
       <div class="container">
         <p class="text-muted">Преподаватель глазами студентов</p>
       </div>
     </footer>
-
-    
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script>
@@ -205,7 +203,5 @@
         $('[data-toggle="popover"]').popover()
       })
     </script>
-
-
   </body>
 </html>
