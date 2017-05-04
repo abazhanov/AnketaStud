@@ -138,6 +138,7 @@
 //////////////////////////////////////////////////////////////////
  
 echo "<script type=\"text/javascript\">";
+//echo "  google.charts.load('current', {'packages':['line']});";
 echo "  google.charts.load('current', {'packages':['line']});";
 echo "  google.charts.setOnLoadCallback(drawChart);";
 echo "  function drawChart() {";
@@ -172,16 +173,16 @@ echo "  var data = google.visualization.arrayToDataTable([";
 //Продолжаем формировать JAVA скрипт
 echo "  var options = {
          chart: {
-           title: 'Box Office Earnings in First Two Weeks of Opening',
-           subtitle: 'in millions of dollars (USD)'
+           title: 'Сводный график по преподавателям',
+           subtitle: 'в разрезе среднего балла'
          },
-         width: 900,
+         width: 1000,
          height: 500
          };
 
          var chart = new google.charts.Line(document.getElementById('linechart_material'));
-
          chart.draw(data, google.charts.Line.convertOptions(options));
+
        }
        </script>";
 //Закончили формировать JAVA скрипт

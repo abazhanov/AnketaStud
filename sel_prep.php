@@ -68,13 +68,12 @@
           <!-- Get FIO prepod -->
           <?php   
 
-            $request="SELECT DISTINCT prep_man.fam, prep_man.imja, prep_man.otch, zplan.gruppa, prep_profile.oid AS pid, predmet.name, gruppa.kod
-FROM            zplan INNER JOIN
-                         pps ON zplan.pps = pps.oid INNER JOIN
-                         prep_profile ON pps.prep = prep_profile.oid INNER JOIN
-                         prep_man ON prep_profile.prep = prep_man.oid INNER JOIN
-                         predmet ON pps.predmet = predmet.oid INNER JOIN
-                         gruppa ON zplan.gruppa = gruppa.oid
+            $request="SELECT DISTINCT prep_man.fam, prep_man.imja, prep_man.otch, zplan.gruppa, prep_profile.oid AS pid, predmet.name, gruppa.kod, predmet.oid as oid_disciplina
+FROM            zplan INNER JOIN pps ON zplan.pps = pps.oid 
+                      INNER JOIN prep_profile ON pps.prep = prep_profile.oid 
+                      INNER JOIN prep_man ON prep_profile.prep = prep_man.oid 
+                      INNER JOIN predmet ON pps.predmet = predmet.oid 
+                      INNER JOIN gruppa ON zplan.gruppa = gruppa.oid
 WHERE        (zplan.gruppa = ".$_GET['id'].")";
             
             //Старый запрос
@@ -102,7 +101,7 @@ WHERE        (zplan.gruppa = ".$_GET['id'].")";
               while( $obj = sqlsrv_fetch_object($res)) { //Перебираем преподавателей
               echo "<h3>".$obj->fam." ".$obj->imja." ".$obj->otch." (".$obj->name.")</h3>";
               //echo "<h2>".$obj->pid."</h3>";
-              echo "<table class=\"table\">
+              echo "<table class=\"table table-hover\">
                       <thead>
                         <tr>
                           <th>Критерий</th>
@@ -118,11 +117,11 @@ WHERE        (zplan.gruppa = ".$_GET['id'].")";
                       
                   echo "<tr>
                         <td>".$obj_questions->question."</td> 
-                        <td align=\"center\"><input type=\"radio\" name=\"$obj_questions->id&&&$obj->pid\" value=\"1\" required></td>
-                        <td align=\"center\"><input type=\"radio\" name=\"$obj_questions->id&&&$obj->pid\" value=\"2\" required></td>
-                        <td align=\"center\"><input type=\"radio\" name=\"$obj_questions->id&&&$obj->pid\" value=\"3\" required></td>
-                        <td align=\"center\"><input type=\"radio\" name=\"$obj_questions->id&&&$obj->pid\" value=\"4\" required></td>
-                        <td align=\"center\"><input type=\"radio\" name=\"$obj_questions->id&&&$obj->pid\" value=\"5\" required></td>
+                        <td align=\"center\"><input type=\"radio\" name=\"$obj_questions->id&&&$obj->pid&&&$obj->oid_disciplina\" value=\"1\" required></td>
+                        <td align=\"center\"><input type=\"radio\" name=\"$obj_questions->id&&&$obj->pid&&&$obj->oid_disciplina\" value=\"2\" required></td>
+                        <td align=\"center\"><input type=\"radio\" name=\"$obj_questions->id&&&$obj->pid&&&$obj->oid_disciplina\" value=\"3\" required></td>
+                        <td align=\"center\"><input type=\"radio\" name=\"$obj_questions->id&&&$obj->pid&&&$obj->oid_disciplina\" value=\"4\" required></td>
+                        <td align=\"center\"><input type=\"radio\" name=\"$obj_questions->id&&&$obj->pid&&&$obj->oid_disciplina\" value=\"5\" required></td>
                       </tr>";
                       
                         }

@@ -31,9 +31,9 @@
                 
                 $NV_Input=explode("&&&",$key);
                 
-                //echo "POST Вопрос:".$NV_Input[0]." | id преподавателя: ".$NV_Input[1]." | значение ответа: ".$value."<br>";
+                echo "POST Вопрос:".$NV_Input[0]." | id преподавателя: ".$NV_Input[1]." | значение ответа: ".$value." | ID Дисциплины: ".$NV_Input[2]."<br>";
 
-                $question="INSERT anstud_main (id_prep, answer, date, question) values ($NV_Input[1],$value,GETDATE(), $NV_Input[0])";
+                $question="INSERT anstud_main (id_prep, answer, date, question, id_disciplina) values ($NV_Input[1],$value,GETDATE(), $NV_Input[0], $NV_Input[2])";
                 $res_questions=sqlsrv_query($conn, $question);
                 if( $res_questions === false ) {
                     die( print_r( sqlsrv_errors(), true));
