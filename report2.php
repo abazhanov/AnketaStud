@@ -28,7 +28,7 @@
         <?php
           /////////////////////////////////
           //Создаем отчет по преподавателям
-          $request="SELECT     anstud_main.id_prep, prep_man.fam, prep_man.imja, prep_man.otch, anstud_question.question, round(AVG(anstud_main.answer), 2) sum_answer, round(sum(man.avgg ),2) as avv  
+          $request="SELECT     anstud_main.id_prep, prep_man.fam, prep_man.imja, prep_man.otch, anstud_question.question, round(AVG(anstud_main.answer), 2) sum_answer, round(AVG(man.avgg ),2) as avv  
                     FROM            anstud_main INNER JOIN
                                                     anstud_question ON anstud_main.question = anstud_question.id
 						                        INNER JOIN
@@ -63,7 +63,7 @@
                               <h4 class=\"panel-title\">
                                 <a class=\"collapsed\" role=\"button\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#collapse$pid\" aria-expanded=\"true\" aria-controls=\"collapse$pid\">
                                   $LastFIO</a><span> </span>
-                                <span class=\"glyphicon glyphicon-signal\" aria-hidden=\"true\"></span> <span>$LastFIORating</span>
+                                <span class=\"glyphicon glyphicon-signal\" aria-hidden=\"true\"></span> <span>$LastFIORating</span><span class=\"pull-right\"><a href=detail.php?id=".$pid." type=\"button\" class=\"btn btn-default btn-xs\">Детализация</a></span>
                               </h4>
                             </div>
                             <div id=\"collapse$pid\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"heading$pid\">
@@ -110,7 +110,7 @@
                               <h4 class=\"panel-title\">
                                 <a class=\"collapsed\" role=\"button\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#collapse$pid\" aria-expanded=\"true\" aria-controls=\"collapse$pid\">
                                   $LastFIO</a><span> </span>
-                                  <span class=\"glyphicon glyphicon-signal\" aria-hidden=\"true\"></span> <span>$LastFIORating</span>
+                                  <span class=\"glyphicon glyphicon-signal\" aria-hidden=\"true\"></span> <span>$LastFIORating</span><span class=\"pull-right\"><a href=detail.php?id=".$pid." type=\"button\" class=\"btn btn-default btn-xs\">Детализация</a></span>
                               </h4>
                             </div>
                             <div id=\"collapse$pid\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"heading$pid\">
@@ -134,7 +134,7 @@
                          
           echo "</div>";
 //////////////////////////////////////////////////////////////////          
-//  Формируем JAVA скрипт, отвественный за рисование графика
+//  Формируем JAVA скрипт, ответственный за рисование графика
 //////////////////////////////////////////////////////////////////
  
 echo "<script type=\"text/javascript\">";
@@ -189,7 +189,7 @@ echo "  var options = {
 ///////////////////////////////////        
         
         ?>
-         <div id="linechart_material"></div> <!-- В этом месте рисуем график -->
+         <div id="linechart_material_1"></div> <!-- В этом месте рисуем график -->
     </div>
     <br>
     <footer class="footer">
