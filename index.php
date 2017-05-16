@@ -22,51 +22,22 @@
           <h1>Преподаватель глазами студентов</h1>
 
       <?php
-      header("Content-Type: text/html; charset=cp1251");
-      
-      $UID="viewer"; 
-      $PWD="qaz123"; 
-      $serverName = "172.17.3.7"; 
-      $connectionInfo = array( "Database"=>"HS", "UID"=>"$UID", "PWD"=>"$PWD"); 
-      $conn = sqlsrv_connect( $serverName, $connectionInfo); 
-
-      if(!$conn) die(print_r (sqlsrv_errors(),true));    
-
-      $request="SELECT oid, kod FROM gruppa WHERE sub<>1 ORDER BY kod";
-      $res=sqlsrv_query($conn, $request);
-      //$row=sqlsrv_fetch_object($res);
+        header("Content-Type: text/html; charset=cp1251");
+        $UID="viewer"; 
+        $PWD="qaz123"; 
+        $serverName = "172.17.3.7"; 
+        $connectionInfo = array( "Database"=>"HS", "UID"=>"$UID", "PWD"=>"$PWD"); 
+        $conn = sqlsrv_connect( $serverName, $connectionInfo); 
+        if(!$conn) die(print_r (sqlsrv_errors(),true));    
+        $request="SELECT oid, kod FROM gruppa WHERE sub<>1 ORDER BY kod";
+        $res=sqlsrv_query($conn, $request);
       ?>
 
-
-      <!-- Single button -->
-      <div class="btn-group">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Выберете группу <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-    
-      <?php
-      while( $obj = sqlsrv_fetch_object($res)) {
-        echo "<li><a href=\"sel_prep.php?id=".$obj->oid."\">".$obj->kod."</a></li>";
-        //echo $obj->oid."---";
-       
-      }
-      ?>
-        </ul>
-      </div>
-
-      <form action="generate.php" method="get">
-          <p>Введите количество создаваемых пользователей (логины):<br><input type="number" name="NumberOfUser"></p>
-          <p><select size="10" multiple name="Gruppa">
-            <?php
-              while( $obj = sqlsrv_fetch_object($res)) {
-                echo "<option value=\"$obj->kod\">$obj->kod</option>";
-              }
-            ?>
-          </select></p>
-          <p><input type="submit" value="Создать"></p>
-        </form>
-
+      <form action="rating.php" method="get">
+        <p>Введите логин: <input type="text" name="login"></p>
+        <p>Введите пароль: <input type="password" name="password"></p>
+        <p><input type="submit" value="Создать"></p>
+      </form>
 
     </div>
 
@@ -77,8 +48,5 @@
         $('[data-toggle="popover"]').popover()
       })
     </script>
-
-
-    
   </body>
 </html>
