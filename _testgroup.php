@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html>
   <head>
       <meta charset="windows-1251">
@@ -7,12 +6,11 @@
     <title>Преподаватель глазами студентов</title>
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-     <link href="css/dopstyle.css" rel="stylesheet">
+    <link href="css/dopstyle.css" rel="stylesheet">
   </head>
   <body>
     <div class="container">
           <h1>Преподаватель глазами студентов</h1>
-          <p>Уважаемые студенты, доступ к анкетированию осуществляется по логинам, выданным деканатом.</p>
       <?php
         header("Content-Type: text/html; charset=cp1251");
         $UID="viewer"; 
@@ -24,11 +22,6 @@
         $request="SELECT oid, kod FROM gruppa WHERE sub<>1 ORDER BY kod";
         $res=sqlsrv_query($conn, $request);
       ?>
-      <form action="rating.php" method="get">
-        <p>Введите логин: <input type="text" name="login"></p>
-        <p>Введите пароль: <input type="password" name="password"></p>
-        <p><input type="submit" value="Создать"></p>
-      </form>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
