@@ -23,11 +23,12 @@
           $connectionInfo = array( "Database"=>"HS", "UID"=>"$UID", "PWD"=>"$PWD"); 
           $conn = sqlsrv_connect( $serverName, $connectionInfo); 
           if(!$conn) die(print_r (sqlsrv_errors(),true));
-          ?>
+        ?>
 
 
-          <?php
+        <?php
           //Перебираем в цикле определенного преподавателя в разрезе дисциплин
+          //echo "Пришел id: ".$_GET['id'];
           $request="SELECT prep_man.fam, prep_man.imja, prep_man.otch, predmet.name, predmet.oid as id_disciplina, id_prep
                     FROM anstud_main
 	                        INNER JOIN prep_man ON id_prep=prep_man.oid

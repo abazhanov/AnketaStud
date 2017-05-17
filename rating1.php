@@ -45,11 +45,11 @@
           if($User!=0) { //Пользователь прошел аутентификацию и мы формируем для него список преподавателей и вопросов
             echo "<h2>Оцените Ваших преподавателей:</h2>";
 
-            $request1="SELECT oid, kod FROM gruppa WHERE kod='".$obj->ForGroup."'";
+            $request1="SELECT oid FROM gruppa WHERE kod='".$obj->ForGroup."'";
             $res1=sqlsrv_query($conn, $request1);
             $obj = sqlsrv_fetch_object($res1);
             
-            echo "<br><h3>Ваша группа: $obj->kod</h3>";
+            echo "<br>Код группы: ".$obj->oid;
     
             //<!-- Get FIO prepod -->
             $request="SELECT DISTINCT prep_man.fam, prep_man.imja, prep_man.otch, prep_man.oid as pid, zplan.gruppa, prep_profile.oid, predmet.name, gruppa.kod, predmet.oid as oid_disciplina
@@ -59,7 +59,7 @@
                             INNER JOIN predmet ON pps.predmet = predmet.oid 
                             INNER JOIN gruppa ON zplan.gruppa = gruppa.oid
                         WHERE        (zplan.gruppa = ".$obj->oid.")";
-            //echo "<br>ТЕКСТ ЗАПРОСА: ".$request;
+            echo "<br>ТЕКСТ ЗАПРОСА: ".$request;
             $res=sqlsrv_query($conn, $request);
 
             //Получаю вопросы и их id
