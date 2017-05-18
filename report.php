@@ -47,7 +47,7 @@
 													group by id_prep) as man on anstud_main.id_prep=man.id_prep
 
 						 GROUP BY anstud_main.id_prep, prep_man.fam, prep_man.imja, prep_man.otch, anstud_question.question
-						 ORDER BY fam desc";
+						 ORDER BY avv desc, fam";
 
             $res=sqlsrv_query($conn, $request);
             $pid=0; //проверка текущего ФИО и первой записи(0 означает что это первая запись и тогда не добавляется тег <hr>)

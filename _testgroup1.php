@@ -35,7 +35,7 @@
         }
         $ArrSubGruppa=$ArrSubGruppa.")";
           //Создаем запрос для извлечения ФИО преподавателя, предмета и имя подгруппы
-          $request_predmeti= "SELECT DISTINCT prep_man.fam, prep_man.imja, prep_man.otch, prep_man.oid as pid, prep_profile.oid, predmet.name, predmet.oid as oid_disciplina
+          $request_predmeti= "SELECT DISTINCT prep_man.fam, prep_man.imja, prep_man.otch, prep_man.oid as pid, zplan.gruppa, prep_profile.oid, predmet.name, gruppa.kod, predmet.oid as oid_disciplina
                         FROM            zplan INNER JOIN pps ON zplan.pps = pps.oid 
                            INNER JOIN prep_profile ON pps.prep = prep_profile.oid 
                             INNER JOIN prep_man ON prep_profile.prep = prep_man.oid 
@@ -46,7 +46,7 @@
           $res_predmeti=sqlsrv_query($conn, $request_predmeti);
           while( $obj_predmeti = sqlsrv_fetch_object($res_predmeti)) {  
             //echo "<br>$obj_predmeti->fam $obj_predmeti->imja $obj_predmeti->otch $obj_predmeti->name $obj_predmeti->kod"; //Выводим ФИО преподавателя, предмета и имя подгруппы
-            echo "<br><input type=\"checkbox\" checked=\"checked\"/> $obj_predmeti->fam $obj_predmeti->imja $obj_predmeti->otch <strong>$obj_predmeti->name</strong>";
+            echo "<br><input type=\"checkbox\" checked=\"checked\"/> $obj_predmeti->fam $obj_predmeti->imja $obj_predmeti->otch <strong>$obj_predmeti->name</strong> $obj_predmeti->kod";
 
           }
         
