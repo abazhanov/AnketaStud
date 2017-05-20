@@ -27,7 +27,7 @@
       <form action="rating.php" method="get">
         <p>Введите логин: <input type="text" name="login"></p>
         <p>Введите пароль: <input type="password" name="password"></p>
-        <p><input type="submit" value="Создать"></p>
+        <p><input type="submit" value="Войти"></p>
       </form>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
