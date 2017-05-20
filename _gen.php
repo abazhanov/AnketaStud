@@ -1,12 +1,10 @@
 <?php include('_header.php'); ?>
-  
     <div class="container">
           <h1>Преподаватель глазами студентов</h1>
       <?php      
           $request="SELECT oid, kod FROM gruppa WHERE sub<>1 ORDER BY kod"; //Текст запроса
           $res=sqlsrv_query($conn, $request); //Выполнение запроса
       ?>
-      
       <div><!-- Форма для запроса количества создаваемых логинов и для какой группы -->
         <h3>Создание логинов и паролей для пользователей</h3>
         <form action="generate.php" method="get">
@@ -29,8 +27,4 @@
         $('[data-toggle="popover"]').popover()
       })
     </script>
-
-
-    
-  </body>
-</html>
+<?php include('_footer.php'); ?>

@@ -1,11 +1,8 @@
-
 <?php include '_header.php'; ?>
-
     <div class="container">
           <h1>Преподаватель глазами студентов</h1>
           <p>Уважаемые студенты, доступ к анкетированию осуществляется по логинам, выданным деканатом.</p>
       <?php
-        //include '_connect_sql.php';
         $request="SELECT oid, kod FROM gruppa WHERE sub<>1 ORDER BY kod";
         $res=sqlsrv_query($conn, $request);
       ?>
@@ -15,5 +12,4 @@
         <p><input type="submit" value="Войти"></p>
       </form>
     </div>
-
 <?php include '_footer.php';?>
