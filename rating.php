@@ -82,6 +82,7 @@
                           <th>Нормально</th>
                           <th>Хорошо</th>
                           <th>Очень хорошо</th>
+                          <th>Я из другой подгруппы</th>
                       </tr>
                     </thead>
                     <tbody>";
@@ -94,6 +95,7 @@
                         <td align=\"center\"><input type=\"radio\" name=\"$obj_questions->id&&&$obj->pid&&&$obj->oid_disciplina\" value=\"3\" required></td>
                         <td align=\"center\"><input type=\"radio\" name=\"$obj_questions->id&&&$obj->pid&&&$obj->oid_disciplina\" value=\"4\" required></td>
                         <td align=\"center\"><input type=\"radio\" name=\"$obj_questions->id&&&$obj->pid&&&$obj->oid_disciplina\" value=\"5\" required></td>
+                        <td align=\"center\"><input type=\"radio\" name=\"$obj_questions->id&&&$obj->pid&&&$obj->oid_disciplina\" value=\"0\"></td>
                       </tr>";
                       
                         }
