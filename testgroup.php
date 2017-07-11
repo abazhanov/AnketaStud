@@ -23,7 +23,7 @@
         //Сначала получим список всех subgroup из таблицы gcross
         $request = "SELECT gruppa, subgruppa from gcross where gruppa=13097";
         $res=sqlsrv_query($conn, $request);
-        echo "<form action=\"_selectsubfruppa.php\">";
+        echo "<form action=\"selectsubfruppa.php\">";
         $ArrSubGruppa="(";
         while( $obj = sqlsrv_fetch_object($res)) { //Перебираем все id subgruppa 
           //echo "<h3>Группа: $obj->gruppa | Имя подгруппы: $obj->subgruppa</h3>"; //Выводим ID Группы и имя subgruppa
