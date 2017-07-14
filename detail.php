@@ -94,6 +94,7 @@
 //////////////////////////////////////////////////////////////////          
 //  Формируем JAVA скрипт, ответственный за рисование графика
 //////////////////////////////////////////////////////////////////
+echo "<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>\n";
 echo "<script type=\"text/javascript\">";
 echo "  google.charts.load('current', {'packages':['line']});";
 echo "  google.charts.setOnLoadCallback(drawChart);";

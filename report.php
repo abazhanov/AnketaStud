@@ -2,6 +2,9 @@
     <div class="container">
         <h1>Преподаватель глазами студентов</h1>
         <?php
+          include('check.php'); //Проверка атунтификации.
+          if($Auth==0) { header("Location: notauth.php"); exit();  }
+
           /////////////////////////////////
           //Создаем отчет по преподавателям
           $request=" SELECT     anstud_main.id_prep, prep_man.fam, prep_man.imja, prep_man.otch, anstud_question.question, round(AVG(anstud_main.answer), 2) sum_answer, round(AVG(man.avgg ),2) as avv  
@@ -102,12 +105,12 @@
 //////////////////////////////////////////////////////////////////          
 //  Формируем JAVA скрипт, ответственный за рисование графика
 //////////////////////////////////////////////////////////////////
-echo "<script type=\"text/javascript\">";
-//echo "  google.charts.load('current', {'packages':['line']});";
-echo "  google.charts.load('current', {'packages':['line']});";
-echo "  google.charts.setOnLoadCallback(drawChart);";
-echo "  function drawChart() {";
-echo "  var data = google.visualization.arrayToDataTable([";
+echo "<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>\n";
+echo "<script type=\"text/javascript\">\n";
+echo "  google.charts.load('current', {'packages':['line']});\n";
+echo "  google.charts.setOnLoadCallback(drawChart);\n";
+echo "  function drawChart() {\n";
+echo "  var data = google.visualization.arrayToDataTable([\n";
         echo "['Вопрос'";
         for ($i=0; $i<$SumPrepod+1; $i++) {
           echo ", '".$ValueAnswerForPrepod[$i][0][2]."'";
@@ -147,7 +150,7 @@ echo "  var options = {
 //Закончили формировать JAVA скрипт
 ///////////////////////////////////        
         ?>
-         <div id="linechart_material_1"></div> <!-- В этом месте рисуем график -->
+         <div id="linechart_material"></div> <!-- В этом месте рисуем график -->
     </div>
     <br>
 <?php include('footer.php'); ?>
