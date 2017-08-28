@@ -38,11 +38,11 @@ if(isset($_POST['submit']))
             $request2 = "UPDATE anstud_login SET UserHash='$hash' WHERE id='".$obj->id."'";
             $res2 = sqlsrv_query($conn, $request2);
             //Ставим куки
-            setcookie("id", $obj->id, time()+60*60*24*30);
-            setcookie("hash", $hash, time()+60*60*24*30);
+            setcookie("id", $obj->id, 0); // time()+60*60*24*30
+            setcookie("hash", $hash, 0);
 
             //Переадресовываем браузер на страницу проверки нашего скрипта
-            header("Location: report.php"); exit();
+            header("Location: select_report.php"); exit();
         }
         else {
             print "<h3>Вы ввели неправильный логин/пароль</h3>";

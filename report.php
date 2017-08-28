@@ -5,27 +5,44 @@
           include('check.php'); //Проверка атунтификации.
           if($Auth==0) { header("Location: notauth.php"); exit();  }
 
+
           /////////////////////////////////
           //Создаем отчет по преподавателям
-          $request=" SELECT     anstud_main.id_prep, prep_man.fam, prep_man.imja, prep_man.otch, anstud_question.question, round(AVG(anstud_main.answer), 2) sum_answer, round(AVG(man.avgg ),2) as avv  
-                    FROM            anstud_main INNER JOIN
-                                                    anstud_question ON anstud_main.question = anstud_question.id
 
-						                        INNER JOIN
-                                                    prep_man ON anstud_main.id_prep = prep_man.oid  
-						                        INNER JOIN
-                                                    prep_profile ON prep_profile.prep = prep_man.oid													
-													inner join (select id_prep, AVG(anstud_main.answer) as avgg from anstud_main
-													
-													INNER JOIN
-                                                    anstud_question ON anstud_main.question = anstud_question.id
-						                        INNER JOIN
-                                                    prep_profile ON anstud_main.id_prep = prep_profile.prep
-						                        INNER JOIN
-                                                    prep_man ON prep_profile.prep = prep_man.oid 
-													group by id_prep) as man on anstud_main.id_prep=man.id_prep
-						 GROUP BY anstud_main.id_prep, prep_man.fam, prep_man.imja, prep_man.otch, anstud_question.question
-						 ORDER BY avv desc, fam";
+          $KAF=$_GET['kaf'];
+          if($KAF!=0) { //Если передали id кафедры, то выполняем запрос с фильтром по кафедре
+          $request=" SELECT     anstud_main.id_prep, prep_man.fam, prep_man.imja, prep_man.otch, anstud_question.question, round(AVG(anstud_main.answer), 2) sum_answer, round(AVG(man.avgg ),2) as avv  
+                    FROM            anstud_main 
+                    INNER JOIN anstud_question ON anstud_main.question = anstud_question.id
+                    INNER JOIN prep_man ON anstud_main.id_prep = prep_man.oid  
+						        INNER JOIN prep_profile ON prep_profile.prep = prep_man.oid													
+										inner join (select id_prep, AVG(anstud_main.answer) as avgg from anstud_main
+											INNER JOIN anstud_question ON anstud_main.question = anstud_question.id
+						          INNER JOIN prep_profile ON anstud_main.id_prep = prep_profile.prep
+						          INNER JOIN prep_man ON prep_profile.prep = prep_man.oid 
+											group by id_prep) as man on anstud_main.id_prep=man.id_prep
+                    INNER JOIN preppodr ON anstud_main.id_prep = preppodr.prep	
+                    INNER JOIN kafedry ON preppodr.kafedry = kafedry.oid	
+                    WHERE kafedry.oid=".$KAF."
+						        GROUP BY anstud_main.id_prep, prep_man.fam, prep_man.imja, prep_man.otch, anstud_question.question
+						        ORDER BY avv desc, fam";
+          } else { //Если не передали id кафедры, то выполняем запрос без фильтра по кафедре
+          $request=" SELECT     anstud_main.id_prep, prep_man.fam, prep_man.imja, prep_man.otch, anstud_question.question, round(AVG(anstud_main.answer), 2) sum_answer, round(AVG(man.avgg ),2) as avv  
+                    FROM            anstud_main 
+                    INNER JOIN anstud_question ON anstud_main.question = anstud_question.id
+                    INNER JOIN prep_man ON anstud_main.id_prep = prep_man.oid  
+						        INNER JOIN prep_profile ON prep_profile.prep = prep_man.oid													
+										inner join (select id_prep, AVG(anstud_main.answer) as avgg from anstud_main
+											INNER JOIN anstud_question ON anstud_main.question = anstud_question.id
+						          INNER JOIN prep_profile ON anstud_main.id_prep = prep_profile.prep
+						          INNER JOIN prep_man ON prep_profile.prep = prep_man.oid 
+											group by id_prep) as man on anstud_main.id_prep=man.id_prep
+                    INNER JOIN preppodr ON anstud_main.id_prep = preppodr.prep	
+                    INNER JOIN kafedry ON preppodr.kafedry = kafedry.oid	
+                 
+						        GROUP BY anstud_main.id_prep, prep_man.fam, prep_man.imja, prep_man.otch, anstud_question.question
+						        ORDER BY avv desc, fam";  
+          }
             $res=sqlsrv_query($conn, $request);
             $pid=0; //проверка текущего ФИО и первой записи(0 означает что это первая запись и тогда не добавляется тег <hr>)
             $DetailRecord="";
@@ -76,6 +93,8 @@
                 $LastFIO="$obj->fam $obj->imja $obj->otch";
                 $LastFIORating=$obj->avv;
             }
+
+            if($pid != 0) {
               //После завершения цикла еще раз выводим последнюю вкладку, т.к. из цикла мы уже вылетели, а последняя запись осталась не обработанной.
                                 echo "<div class=\"panel panel-default\">
                             <div class=\"panel-heading\" role=\"tab\" id=\"heading$pid\">
@@ -101,6 +120,7 @@
                               </div>
                             </div>
                           </div>";
+            } else { echo "<h3>Данные отсутствуют</h3>";}
           echo "</div>";
 //////////////////////////////////////////////////////////////////          
 //  Формируем JAVA скрипт, ответственный за рисование графика

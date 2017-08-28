@@ -2,6 +2,9 @@
     <div class="container">
         <h1>Преподаватель глазами студентов</h1>
         <?php
+          include('check.php'); //Проверка атунтификации.
+          if($Auth==0) { header("Location: notauth.php"); exit();  }
+
           //Перебираем в цикле определенного преподавателя в разрезе дисциплин
           //echo "Пришел id: ".$_GET['id'];
           $request="SELECT prep_man.fam, prep_man.imja, prep_man.otch, predmet.name, predmet.oid as id_disciplina, id_prep
